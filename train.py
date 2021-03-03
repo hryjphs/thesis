@@ -9,10 +9,11 @@ import gym
 #from utils import plotLearning
 import tensorflow as tf
 from tradingenv import TradingEnv
+from visual import plotLearning
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
-    num_simulation = 5000
+    num_simulation = 50000
     env = TradingEnv(num_sim = num_simulation) # see tradingenv.py for more info 
     lr = 0.001
     agent = Agent(gamma=0.99, epsilon=1.0, lr=lr, 

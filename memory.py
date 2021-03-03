@@ -10,9 +10,9 @@ class ReplayBuffer():
         self.mem_size = max_size
         self.mem_cntr = 0   #keep track of our first unsaved memory 
 
-        self.state_memory = np.zeros((self.mem_size, *input_dims),   # * to unpack the list to elements
+        self.state_memory = np.zeros((self.mem_size, input_dims),   # * to unpack the list to elements
                                     dtype=np.float32)
-        self.new_state_memory = np.zeros((self.mem_size, *input_dims),
+        self.new_state_memory = np.zeros((self.mem_size, input_dims),
                                 dtype=np.float32)
         self.action_memory = np.zeros(self.mem_size, dtype=np.int32)
         self.reward_memory = np.zeros(self.mem_size, dtype=np.float32)

@@ -6,13 +6,15 @@ More models should be considered later....
 
 from memory import ReplayBuffer 
 import numpy as np
+import keras
+import tensorflow as tf
 
 def build_dqn(lr, n_actions, input_dims, fc1_dims, fc2_dims):
     model = keras.Sequential([
         keras.layers.Dense(fc1_dims, activation='relu'),
         keras.layers.Dense(fc2_dims, activation='relu'),
         keras.layers.Dense(n_actions, activation=None)])
-    model.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=lr), loss='mean_squared_error')
 
     return model
 
@@ -29,7 +31,7 @@ class Agent():
         self.batch_size = batch_size
         self.model_file = fname
         self.memory = ReplayBuffer(mem_size, input_dims)
-        self.n_actions = self.env.num_action - 1
+        self.n_actions = self.env.num_action 
         self.q_eval = build_dqn(lr, self.n_actions, input_dims, 256, 256)
         
 
@@ -39,7 +41,7 @@ class Agent():
     def choose_action(self, observation):  
         # epsilon greedy to choose action, maybe later can try out Boltzman... 
         if np.random.random() < self.epsilon:
-            action = np.random.choice(self.action_space) #random select an action from action space
+            action = self.action_space.sample() #random select an action from action space
         else:
             state = np.array([observation])
             actions = self.q_eval.predict(state)  # Q(a,s)
@@ -55,15 +57,25 @@ class Agent():
         states, actions, rewards, states_, dones = \
                 self.memory.sample_buffer(self.batch_size)
 
+        
+
+        #actions = actions.reshape(-1, 1)
+        #rewards = rewards.reshape(-1, 1)
+        #dones = dones.reshape(-1, 1)
+        
+
         q_eval = self.q_eval.predict(states)  # Q(a,s) for all actions, for all states in batch
+        
         q_next = self.q_eval.predict(states_)  # Q(a,s_) for all actions....
 
 
         q_target = np.copy(q_eval)
-        batch_index = np.arange(self.batch_size, dtype=np.int32)
+        batch_index = np.arange(self.batch_size, dtype=np.int32)  # 0-63
+        
 
         q_target[batch_index, actions] = rewards + \
-                        self.gamma * np.max(q_next, axis=1)*dones
+                        self.gamma * np.max(q_next,1)*dones
+        
 
 
         self.q_eval.train_on_batch(states, q_target)
