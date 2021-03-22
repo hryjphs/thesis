@@ -59,7 +59,7 @@ class TradingEnv(gym.Env):
 
         # cost part
         self.ticksize = ticksize  
-        self.multi = multi
+        self.multi = multi                                                                         # change to correlate with the time of the day--6 trading hours
 
         # risk attitude
         self.k = k                                                                                 
