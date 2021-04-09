@@ -13,3 +13,14 @@ Action space: the holding position of the stock: [0,100], continuous
 State space: [current stock price, current holding postion, time to maturity]
 Reward: profit and loss
 RL algorithm: TAD3 
+
+
+### 2021/4/9: 
+In DDDQN_PRE file: 
+
+Initial time to maturity is 10 days; Assume we could trade 5 times a day; short 1 European call option contract ( each for 100 shares)
+Geometric brownian simulation (constant volatility) or SABR (stochastic volatility) to simulate the underlying stock prices
+Action space: the holding position of the stock: [0,100], DISCRETE
+State space: [current stock price, current holding postion, time to maturity]
+Reward: profit and loss
+RL algorithm: Double dueling DQN with prioritized  replay  experience-->stablize, avoid overestimation, speed up 
